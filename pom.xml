@@ -88,7 +88,13 @@
             <version>3.3.0</version>
         </dependency>
         <!--feign end-->
-
+        <!--Hystrix begin-->
+        <dependency>
+            <groupId>com.netflix.hystrix</groupId>
+            <artifactId>hystrix-core</artifactId>
+            <version>1.5.12</version>
+        </dependency>
+        <!--Hystrix end-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>

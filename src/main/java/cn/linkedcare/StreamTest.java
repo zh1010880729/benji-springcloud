@@ -21,7 +21,6 @@ public class StreamTest {
         list.stream().forEach(item -> {
             System.out.println(item);
         });
-
         List<Integer> collect = list.stream()
                 .filter(item -> item >= 6)
                 .collect(Collectors.toList());

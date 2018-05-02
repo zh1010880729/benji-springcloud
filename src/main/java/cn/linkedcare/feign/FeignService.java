@@ -17,4 +17,8 @@ public interface FeignService {
 
     @RequestLine("POST /api/v1/users")
     String getOfficeInfoByEmail(Object param);
+
+
+    @RequestLine("POST /api/v1/users/sync")
+    String getUsers(Object param);
 }

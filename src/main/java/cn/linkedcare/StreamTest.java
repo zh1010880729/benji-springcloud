@@ -1,5 +1,13 @@
 package cn.linkedcare;
 
+import cn.linkedcare.entity.User;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,13 +19,54 @@ import java.util.stream.Collectors;
  */
 public class StreamTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        testFileChannel();
+    }
+
+    public static void testFileChannel() throws Exception {
+        FileInputStream fileInputStream = new FileInputStream("C:\\Users\\admin\\Desktop\\接口文档.txt");
+        FileOutputStream fileOutputStream = new FileOutputStream("E:\\真的是接口文档啦.txt");
+        FileChannel inputStreamChannel = fileInputStream.getChannel();
+        FileChannel outputStreamChannel = fileOutputStream.getChannel();
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        while ((inputStreamChannel.read(buffer)) != -1) {
+            buffer.flip();
+            while (buffer.hasRemaining()) {
+                outputStreamChannel.write(buffer);
+            }
+            buffer.clear();
+        }
+        outputStreamChannel.close();
+        inputStreamChannel.close();
+        fileOutputStream.close();
+        fileInputStream.close();
+    }
+
+    public static void test3() {
+        LocalDateTime localDateTime = LocalDateTime.now().minusMonths(11);
+        System.out.println(localDateTime.toString());
+    }
+
+    public static void test1() {
+        List<User> users = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                User user = new User();
+                user.setId(j);
+                user.setUsername("demo" + i);
+                users.add(user);
+            }
+        }
+        List<Integer> collect = users.stream().map(User::getId).distinct().collect(Collectors.toList());
+        System.out.print(collect);
+    }
+
+    private static void test2() {
         ArrayList<Integer> list = new ArrayList<Integer>();
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++)
                 list.add(j);
         }
-
         list.stream().forEach(item -> {
             System.out.println(item);
         });
@@ -56,7 +105,6 @@ public class StreamTest {
         strings.add("ABC");
 
         Map<Integer, List<String>> map = strings.stream().collect(Collectors.groupingBy(String::length));
-
     }
 
 }

@@ -1,16 +1,19 @@
 package cn.linkedcare;
 
+import cn.linkedcare.entity.Offfice;
 import cn.linkedcare.feign.FeignService;
 import cn.linkedcare.feign.Feigninterceptor;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import feign.Feign;
 import feign.Logger;
 import feign.gson.GsonEncoder;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 张恒 on 2018/4/8.
@@ -26,15 +29,19 @@ public class Application {
                 .logger(new Logger.JavaLogger().appendToFile("E:/logs/http.log"))
                 .target(FeignService.class, "http://bi.linkedcare.cn:35769/");
         Map<String, String> map = new HashMap<>();
-        map.put("startTime", "2018-04-01");
-        map.put("endTime", "2018-04-30");
-        String info = target.getUsers(map);
+        map.put("email", "wei.liu@linkedcare.cn");
+        String info = target.getOfficeInfoByEmail(map);
         System.out.print(info);
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        Map response = objectMapper.readValue(info, Map.class);
-//        response.forEach((key, value) -> System.out.println(key + ":" + value));
-
-
+        JSONObject jsonObject = JSON.parseObject(info);
+        List<Offfice> offfices = jsonObject.getJSONArray("offices").toJavaList(Offfice.class);
+        StringBuilder sb = new StringBuilder("(");
+        offfices.forEach(offfice -> {
+            sb.append("\'").append(offfice.getTenantCode())
+                    .append(offfice.getOfficeCode()).append("\'")
+                    .append(",");
+        });
+        String substring = sb.substring(0, sb.lastIndexOf(",")) + ")";
+        //System.out.print(substring);
     }
 
 }
